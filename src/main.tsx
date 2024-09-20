@@ -5,6 +5,7 @@ import PrimarySearchAppBar from "./components/PrimarySearchAppBar";
 import "./index.css";
 import TasksPage from "./components/TasksPage";
 import { store } from "./lib/store/store";
+import { LocalizationProviderWrapper } from "./LocalizationProvider";
 
 const router = createBrowserRouter([
   {
@@ -15,6 +16,8 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <LocalizationProviderWrapper>
+      <RouterProvider router={router} />
+    </LocalizationProviderWrapper>
   </Provider>
 );
