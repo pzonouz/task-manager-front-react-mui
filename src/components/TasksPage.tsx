@@ -26,6 +26,7 @@ import { useCreateTaskMutation } from "../lib/services/task-api";
 import { Category } from "../lib/types/category";
 import { Priority } from "../lib/types/priority";
 import { CreateTaskFormData } from "../lib/types/task";
+import { Task } from "../lib/types/task";
 
 //UseFormHook
 import { useForm } from "react-hook-form";
@@ -55,20 +56,35 @@ const TasksPage = () => {
     setValue,
     handleSubmit,
     register,
-  } = useForm<CreateTaskFormData>({ resolver: zodResolver(schema) });
+    setError,
+    resetField,
+  } = useForm<Task>({ resolver: zodResolver(schema) });
 
   useEffect(() => {
     setValue("due_date", due_dateValue.toISOString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [due_dateValue]);
+  useEffect(() => {}, [errors]);
 
   const submitHandler = (data: CreateTaskFormData) => {
     data.user = "1";
     createTask(data)
       .unwrap()
-      .then(() => setSnackbarOPen(true))
-      .catch((err) => alert(JSON.stringify(err.data)))
-      .finally();
+      .then(() => {
+        setSnackbarOPen(true);
+        setModalOPen(false);
+        resetField("name");
+        resetField("description");
+      })
+      .catch((err) => {
+        Object.keys(err.data).forEach((field) => {
+          // Set error for each field using setError By ChatGPT
+          setError(field as keyof Task, {
+            type: "manual",
+            message: err.data[field][0],
+          });
+        });
+      });
   };
   return (
     <>
@@ -90,7 +106,7 @@ const TasksPage = () => {
           sx={{ width: "100%" }}
           onClose={() => setSnackbarOPen(false)}
         >
-          Successfully Created
+          "Successfully Created"
         </Alert>
       </Snackbar>
       <Fab
