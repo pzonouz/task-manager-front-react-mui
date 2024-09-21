@@ -6,6 +6,7 @@ import "./index.css";
 import TasksPage from "./components/TasksPage";
 import { store } from "./lib/store/store";
 import { LocalizationProviderWrapper } from "./LocalizationProvider";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const router = createBrowserRouter([
   {
@@ -14,10 +15,13 @@ const router = createBrowserRouter([
     children: [{ path: "/tasks", element: <TasksPage /> }],
   },
 ]);
+const theme = createTheme({});
 createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <LocalizationProviderWrapper>
-      <RouterProvider router={router} />
-    </LocalizationProviderWrapper>
-  </Provider>
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
+      <LocalizationProviderWrapper>
+        <RouterProvider router={router} />
+      </LocalizationProviderWrapper>
+    </Provider>
+  </ThemeProvider>
 );
