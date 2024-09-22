@@ -6,6 +6,7 @@ export type Task = {
   category: string;
   due_date: string;
   user: string;
+  slug: string;
 };
 export type CreateTaskFormData = {
   name: string;

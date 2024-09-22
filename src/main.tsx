@@ -7,12 +7,16 @@ import TasksPage from "./components/TasksPage";
 import { store } from "./lib/store/store";
 import { LocalizationProviderWrapper } from "./LocalizationProvider";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import TaskPage from "./components/TaskPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <PrimarySearchAppBar />,
-    children: [{ path: "/tasks", element: <TasksPage /> }],
+    children: [
+      { path: "/tasks", element: <TasksPage /> },
+      { path: "/tasks/:taskSlug", element: <TaskPage /> },
+    ],
   },
 ]);
 const theme = createTheme({});
