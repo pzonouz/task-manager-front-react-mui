@@ -38,7 +38,7 @@ const TasksList = () => {
                 >
                   <ListItemButton
                     component={Link}
-                    to={`/tasks/${task?.slug}`}
+                    to={`/tasks/${task?.id}`}
                     sx={{
                       paddingY: "1rem",
                       bgcolor: index % 2 ? "grey.200" : "",

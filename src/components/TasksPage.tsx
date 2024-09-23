@@ -71,10 +71,9 @@ const TasksPage = () => {
     setValue("due_date", due_dateValue.toISOString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [due_dateValue]);
-  useEffect(() => {}, [errors]);
 
   const submitHandler = (data: CreateTaskFormData) => {
-    data.user = "1";
+    data.user = "8cb68955-4cdd-4de0-a6dc-2d9cedb3713e";
     createTask(data)
       .unwrap()
       .then(() => {
@@ -175,7 +174,7 @@ const TasksPage = () => {
                   label="Name"
                   variant="outlined"
                   error={!!errors?.name}
-                  helperText={errors?.name?.message?.toString()}
+                  helperText={errors?.name?.message}
                 />
                 <TextField
                   {...register("description")}
@@ -186,7 +185,7 @@ const TasksPage = () => {
                   label="Description"
                   variant="outlined"
                   error={!!errors?.description}
-                  helperText={errors?.description?.message?.toString()}
+                  helperText={errors?.description?.message}
                 />
                 <FormControl fullWidth>
                   <InputLabel id="Priority">Priority</InputLabel>
@@ -200,10 +199,7 @@ const TasksPage = () => {
                   >
                     {priorities?.map((priority: Priority) => {
                       return (
-                        <MenuItem
-                          key={priority?.id}
-                          value={priority?.id.toString()}
-                        >
+                        <MenuItem key={priority?.id} value={priority?.id}>
                           {priority?.name}
                         </MenuItem>
                       );
@@ -217,14 +213,11 @@ const TasksPage = () => {
                     labelId="Category"
                     id="category"
                     label="Category"
-                    defaultValue={categories?.[0]?.id.toString()}
+                    defaultValue={categories?.[0]?.id}
                   >
                     {categories?.map((category: Category) => {
                       return (
-                        <MenuItem
-                          key={category?.id}
-                          value={category?.id.toString()}
-                        >
+                        <MenuItem key={category?.id} value={category?.id}>
                           {category?.name}
                         </MenuItem>
                       );
