@@ -16,6 +16,10 @@ export const taskApi = createApi({
       query: (id: string) => ({ url: `/${id}/`, method: "GET" }),
       providesTags: ["tasks"],
     }),
+    completeTask: builder.mutation<void, string>({
+      query: (id: string) => ({ url: `/${id}/complete-task/`, method: "GET" }),
+      invalidatesTags: ["tasks"],
+    }),
     createTask: builder.mutation<Task, Partial<Task>>({
       query: ({ ...task }) => ({ url: "", body: task, method: "POST" }),
       invalidatesTags: ["tasks"],
@@ -42,4 +46,5 @@ export const {
   useGetTasksQuery,
   useGetTaskQuery,
   useEditTaskMutation,
+  useCompleteTaskMutation,
 } = taskApi;

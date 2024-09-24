@@ -8,12 +8,17 @@ import {
   ListItemText,
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import { useGetTasksQuery } from "../lib/services/task-api";
+import UndoIcon from "@mui/icons-material/Undo";
+import {
+  useCompleteTaskMutation,
+  useGetTasksQuery,
+} from "../lib/services/task-api";
 import { Task } from "../lib/types/task";
 import { Link } from "react-router-dom";
 
 const TasksList = () => {
   const { data: tasks, isLoading, error } = useGetTasksQuery();
+  const [completeTask] = useCompleteTaskMutation();
   return (
     <List sx={{ width: "100%", bgcolor: "background.paper" }}>
       {tasks?.map((task: Task, index) => {
@@ -30,8 +35,14 @@ const TasksList = () => {
                 )}
                 <ListItem
                   secondaryAction={
-                    <IconButton edge="end" aria-label="comments">
-                      <CheckIcon />
+                    <IconButton
+                      edge="end"
+                      aria-label="comments"
+                      onClick={() => {
+                        completeTask(task?.id);
+                      }}
+                    >
+                      {task?.completed ? <UndoIcon /> : <CheckIcon />}
                     </IconButton>
                   }
                   disablePadding
@@ -42,13 +53,18 @@ const TasksList = () => {
                     sx={{
                       paddingY: "1rem",
                       bgcolor: index % 2 ? "grey.200" : "",
-                      "&:hover": {
-                        // bgcolor: index % 2 ? "primary.light" : "white",
-                      },
+                      "&:hover": {},
                     }}
                     dense
                   >
-                    <ListItemText primary={task?.name} />
+                    <ListItemText
+                      primary={task?.name}
+                      sx={{
+                        textDecorationLine: task?.completed
+                          ? "line-through"
+                          : null,
+                      }}
+                    />
                   </ListItemButton>
                 </ListItem>
               </>
