@@ -6,11 +6,12 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Slider,
   Snackbar,
   TextField,
 } from "@mui/material";
 import { useEditTaskMutation, useGetTaskQuery } from "../lib/services/task-api";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Category } from "../lib/types/category";
 import { Priority } from "../lib/types/priority";
 import { LoadingButton } from "@mui/lab";
@@ -41,6 +42,7 @@ const TaskComponent = ({ id }: { id: string }) => {
     description: z.string().min(5),
     priority: z.string(),
     category: z.string(),
+    progress_percentage: z.number(),
     due_date: z.string(),
   });
   const {
@@ -62,6 +64,7 @@ const TaskComponent = ({ id }: { id: string }) => {
     setValue,
     reset,
     setError,
+    control,
   } = useForm<Task>({ resolver: zodResolver(schema) });
 
   const submitHandler = (data: Task) => {
@@ -200,6 +203,31 @@ const TaskComponent = ({ id }: { id: string }) => {
                       shouldDirty: true,
                     });
                   }}
+                />
+                <Controller
+                  name="progress_percentage"
+                  control={control}
+                  render={({ field }) => (
+                    <Slider
+                      {...field}
+                      aria-label="Temperature"
+                      valueLabelDisplay="auto"
+                      step={10}
+                      marks
+                      min={0}
+                      max={100}
+                      value={getValues("progress_percentage") ?? 0}
+                      onChange={(_, newValue: number | number[]) => {
+                        console.log(newValue);
+                        if (Array.isArray(newValue)) {
+                          return;
+                        }
+                        setValue("progress_percentage", newValue, {
+                          shouldDirty: true,
+                        });
+                      }}
+                    />
+                  )}
                 />
                 <LoadingButton
                   type="submit"

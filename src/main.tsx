@@ -14,7 +14,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <PrimarySearchAppBar />,
     children: [
-      { path: "/tasks", element: <TasksPage /> },
+      {
+        path: "/tasks",
+        element: <TasksPage />,
+      },
       { path: "/tasks/:taskId", element: <TaskPage /> },
     ],
   },
