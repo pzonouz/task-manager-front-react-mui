@@ -5,6 +5,7 @@ export type Task = {
   priority: string;
   category: string;
   due_date: string;
+  created_at: string;
   user: string;
   progress_percentage: number;
   completed: Boolean;
@@ -15,6 +16,7 @@ export type CreateTaskFormData = {
   priority: string;
   category: string;
   due_date: string;
+  created_at: string;
   user: string;
   progress_percentage: number;
   completed: Boolean;

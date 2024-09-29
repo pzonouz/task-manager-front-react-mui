@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import TaskComponent from "./TaskComponent";
+import TaskComponent from "../components/TaskComponent";
 
 const TaskPage = () => {
   const { taskId } = useParams();

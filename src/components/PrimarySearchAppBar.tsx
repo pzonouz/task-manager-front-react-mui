@@ -195,6 +195,22 @@ export default function PrimarySearchAppBar() {
                     <ListItemText primary={"Tasks"} />
                   </ListItemButton>
                 </ListItem>
+                <ListItem key={3} disablePadding>
+                  <ListItemButton component={Link} to="/categories">
+                    <ListItemIcon>
+                      <TaskIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Categories"} />
+                  </ListItemButton>
+                </ListItem>
+                <ListItem key={4} disablePadding>
+                  <ListItemButton component={Link} to="/priorities">
+                    <ListItemIcon>
+                      <TaskIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={"Priorities"} />
+                  </ListItemButton>
+                </ListItem>
               </List>
             </Box>
           </Drawer>

@@ -3,11 +3,13 @@ import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import PrimarySearchAppBar from "./components/PrimarySearchAppBar";
 import "./index.css";
-import TasksPage from "./components/TasksPage";
 import { store } from "./lib/store/store";
 import { LocalizationProviderWrapper } from "./LocalizationProvider";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import TaskPage from "./components/TaskPage";
+import TaskPage from "./pages/TaskPage";
+import TasksPage from "./pages/TasksPage";
+import CategoriesPage from "./pages/CategoriesPage";
+import PrioritiesPage from "./pages/PrioritiesPage";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,8 @@ const router = createBrowserRouter([
         element: <TasksPage />,
       },
       { path: "/tasks/:taskId", element: <TaskPage /> },
+      { path: "/categories", element: <CategoriesPage /> },
+      { path: "/priorities", element: <PrioritiesPage /> },
     ],
   },
 ]);

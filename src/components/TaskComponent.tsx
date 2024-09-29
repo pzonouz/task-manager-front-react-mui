@@ -239,7 +239,7 @@ const TaskComponent = ({ id }: { id: string }) => {
                   onClick={handleSubmit(submitHandler)}
                 >
                   Submit
-                </LoadingButton>{" "}
+                </LoadingButton>
                 <Button type="button" variant="contained" color="error">
                   Delete
                 </Button>
