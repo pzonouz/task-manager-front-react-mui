@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import {
   Alert,
   Box,
-  CircularProgress,
   Fab,
   FormControl,
   InputLabel,
@@ -19,8 +18,6 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import AddIcon from "@mui/icons-material/Add";
 
 //RTK Query
-import { useGetPrioritiesQuery } from "../lib/services/priority-api";
-import { useGetCategoriesQuery } from "../lib/services/category-api";
 import { useCreateTaskMutation } from "../lib/services/task-api";
 
 //Types
@@ -35,18 +32,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import dayjs from "dayjs";
 import TasksList from "../components/TasksList";
+import { useLoaderData } from "react-router-dom";
 
 const TasksPage = () => {
-  const {
-    data: priorities,
-    isLoading: prioritiesIsLoading,
-    error: prioritiesError,
-  } = useGetPrioritiesQuery();
-  const {
-    data: categories,
-    isLoading: categoriesIsLoading,
-    error: categoriesError,
-  } = useGetCategoriesQuery();
+  const { priorities, categories } = useLoaderData() as {
+    priorities: Priority[];
+    categories: Category[];
+  };
   const [createTask, { isLoading }] = useCreateTaskMutation();
 
   const [modalOpen, setModalOPen] = useState(false);
@@ -95,158 +87,145 @@ const TasksPage = () => {
   };
   return (
     <>
-      {prioritiesError || categoriesError ? (
-        <Alert severity="error">Server Error</Alert>
-      ) : (
-        <>
-          <TasksList />
-          <Snackbar
-            sx={{
-              width: "80%",
-              position: "fixed",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-            open={snackbarOPen}
-            autoHideDuration={10000}
-            onClose={() => setSnackbarOPen(false)}
-            anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          >
-            <Alert
-              variant="filled"
-              severity="success"
-              sx={{ width: "100%" }}
-              onClose={() => setSnackbarOPen(false)}
-            >
-              "Successfully Created"
-            </Alert>
-          </Snackbar>
-          <Fab
-            onClick={() => setModalOPen(true)}
-            color="primary"
-            aria-label="add"
-            sx={{
-              position: "fixed",
-              bottom: "1rem",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          >
-            <AddIcon />
-          </Fab>
-          {(prioritiesIsLoading || categoriesIsLoading) && (
-            <CircularProgress
-              sx={{ position: "fixed", left: "50%", top: "50%" }}
-            />
-          )}
-          <Modal
-            open={modalOpen}
-            onClose={() => setModalOPen(false)}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            sx={{
+      <TasksList priorities={priorities} categories={categories} />
+      <Snackbar
+        sx={{
+          width: "80%",
+          position: "fixed",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+        open={snackbarOPen}
+        autoHideDuration={10000}
+        onClose={() => setSnackbarOPen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          variant="filled"
+          severity="success"
+          sx={{ width: "100%" }}
+          onClose={() => setSnackbarOPen(false)}
+        >
+          "Successfully Created"
+        </Alert>
+      </Snackbar>
+      <Fab
+        onClick={() => setModalOPen(true)}
+        color="primary"
+        aria-label="add"
+        sx={{
+          position: "fixed",
+          bottom: "1rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <AddIcon />
+      </Fab>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOPen(false)}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Box
+          sx={{
+            maxWidth: "25rem",
+            bgcolor: "white",
+            padding: "1rem",
+            borderRadius: "1rem",
+          }}
+        >
+          <form
+            onSubmit={handleSubmit(submitHandler)}
+            style={{
+              height: "100%",
+              width: "100%",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              flexDirection: "column",
+              gap: "1rem",
             }}
           >
-            <Box
-              sx={{
-                maxWidth: "25rem",
-                bgcolor: "white",
-                padding: "1rem",
-                borderRadius: "1rem",
-              }}
-            >
-              <form
-                onSubmit={handleSubmit(submitHandler)}
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
+            <TextField
+              {...register("name")}
+              fullWidth
+              id="name"
+              label="Name"
+              variant="outlined"
+              error={!!errors?.name}
+              helperText={errors?.name?.message}
+            />
+            <TextField
+              {...register("description")}
+              multiline
+              minRows={4}
+              fullWidth
+              id="description"
+              label="Description"
+              variant="outlined"
+              error={!!errors?.description}
+              helperText={errors?.description?.message}
+            />
+            <FormControl fullWidth>
+              <InputLabel id="Priority">Priority</InputLabel>
+              <Select
+                {...register("priority")}
+                aria-modal
+                labelId="Priority"
+                id="priority"
+                label="Priority"
+                defaultValue={priorities?.[0]?.id}
               >
-                <TextField
-                  {...register("name")}
-                  fullWidth
-                  id="name"
-                  label="Name"
-                  variant="outlined"
-                  error={!!errors?.name}
-                  helperText={errors?.name?.message}
-                />
-                <TextField
-                  {...register("description")}
-                  multiline
-                  minRows={4}
-                  fullWidth
-                  id="description"
-                  label="Description"
-                  variant="outlined"
-                  error={!!errors?.description}
-                  helperText={errors?.description?.message}
-                />
-                <FormControl fullWidth>
-                  <InputLabel id="Priority">Priority</InputLabel>
-                  <Select
-                    {...register("priority")}
-                    aria-modal
-                    labelId="Priority"
-                    id="priority"
-                    label="Priority"
-                    defaultValue={priorities?.[0]?.id}
-                  >
-                    {priorities?.map((priority: Priority) => {
-                      return (
-                        <MenuItem key={priority?.id} value={priority?.id}>
-                          {priority?.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-                <FormControl fullWidth>
-                  <InputLabel id="Categories">Category</InputLabel>
-                  <Select
-                    {...register("category")}
-                    labelId="Category"
-                    id="category"
-                    label="Category"
-                    defaultValue={categories?.[0]?.id}
-                  >
-                    {categories?.map((category: Category) => {
-                      return (
-                        <MenuItem key={category?.id} value={category?.id}>
-                          {category?.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-                <DateTimePicker
-                  defaultValue={dayjs()}
-                  label="DueDateTime"
-                  value={due_dateValue}
-                  onChange={(e) => {
-                    setDueDateValue(e!);
-                  }}
-                />
-                <LoadingButton
-                  component={"button"}
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  loading={isLoading}
-                >
-                  Submit
-                </LoadingButton>
-              </form>
-            </Box>
-          </Modal>
-        </>
-      )}
+                {priorities?.map((priority: Priority) => {
+                  return (
+                    <MenuItem key={priority?.id} value={priority?.id}>
+                      {priority?.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="Categories">Category</InputLabel>
+              <Select
+                {...register("category")}
+                labelId="Category"
+                id="category"
+                label="Category"
+                defaultValue={categories?.[0]?.id}
+              >
+                {categories?.map((category: Category) => {
+                  return (
+                    <MenuItem key={category?.id} value={category?.id}>
+                      {category?.name}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <DateTimePicker
+              defaultValue={dayjs()}
+              label="DueDateTime"
+              value={due_dateValue}
+              onChange={(e) => {
+                setDueDateValue(e!);
+              }}
+            />
+            <LoadingButton
+              component={"button"}
+              type="submit"
+              color="primary"
+              variant="contained"
+              loading={isLoading}
+            >
+              Submit
+            </LoadingButton>
+          </form>
+        </Box>
+      </Modal>
     </>
   );
 };

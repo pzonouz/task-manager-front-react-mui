@@ -1,4 +1,4 @@
 export type Priority = {
-  id: number;
+  id: string;
   name: string;
 };

@@ -18,6 +18,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/tasks",
+        loader: async () => {
+          const resCategories = await fetch(
+            `${import.meta.env.VITE_API_URL}/categories/`
+          );
+          const categories = await resCategories.json();
+          const resPriorities = await fetch(
+            `${import.meta.env.VITE_API_URL}/priorities/`
+          );
+          const priorities = await resPriorities.json();
+          return { categories: categories, priorities: priorities };
+        },
         element: <TasksPage />,
       },
       { path: "/tasks/:taskId", element: <TaskPage /> },

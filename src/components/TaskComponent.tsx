@@ -240,9 +240,6 @@ const TaskComponent = ({ id }: { id: string }) => {
                 >
                   Submit
                 </LoadingButton>
-                <Button type="button" variant="contained" color="error">
-                  Delete
-                </Button>
               </form>
             </>
           )}
