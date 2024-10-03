@@ -10,11 +10,16 @@ import TaskPage from "./pages/TaskPage";
 import TasksPage from "./pages/TasksPage";
 import CategoriesPage from "./pages/CategoriesPage";
 import PrioritiesPage from "./pages/PrioritiesPage";
+import SignupPage from "./pages/SignupPage";
+import SigninPage from "./pages/SigninPage";
+import NotFound from "./components/NotFound";
+import ErrorPage from "./components/Error";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <PrimarySearchAppBar />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/tasks",
@@ -34,6 +39,9 @@ const router = createBrowserRouter([
       { path: "/tasks/:taskId", element: <TaskPage /> },
       { path: "/categories", element: <CategoriesPage /> },
       { path: "/priorities", element: <PrioritiesPage /> },
+      { path: "/auth/signin", element: <SigninPage /> },
+      { path: "/auth/signup", element: <SignupPage /> },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);
