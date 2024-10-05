@@ -1,6 +1,7 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
+  Alert,
   FormControl,
   FormHelperText,
   IconButton,
@@ -8,6 +9,7 @@ import {
   InputLabel,
   OutlinedInput,
   Paper,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import { ReactNode, useState } from "react";
@@ -18,11 +20,13 @@ import { useSignupMutation } from "../lib/services/auth-api";
 import { User } from "../lib/types/User";
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [snackbarOPen, setSnackbarOPen] = useState(false);
   const [signup, { isLoading }] = useSignupMutation();
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(
@@ -51,7 +55,10 @@ const SignupPage = () => {
   const submitHandler = (data: any) => {
     signup(data)
       .unwrap()
-      .then(() => {})
+      .then(() => {
+        setSnackbarOPen(true);
+        reset();
+      })
       .catch((err) => {
         Object.keys(err.data).forEach((field) => {
           // Set error for each field using setError By ChatGPT
@@ -73,6 +80,23 @@ const SignupPage = () => {
         alignItems: "center",
       }}
     >
+      <Snackbar
+        open={snackbarOPen}
+        autoHideDuration={6000}
+        onClose={() => {
+          setSnackbarOPen(false);
+        }}
+        anchorOrigin={{ horizontal: "center", vertical: "top" }}
+      >
+        <Alert
+          onClose={() => {}}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Check your Email inbox and spam folder for To activate your account
+        </Alert>
+      </Snackbar>
       <Paper
         component="form"
         onSubmit={handleSubmit(submitHandler)}
