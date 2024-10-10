@@ -14,15 +14,39 @@ import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSigninMutation } from "../lib/services/auth-api";
+import { redirect, useSearchParams } from "react-router-dom";
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [signin, { isLoading }] = useSigninMutation();
+  const [isLoading, setIsLoading] = useState(false);
+  let [searchParams, setSearchParams] = useSearchParams();
   const submitHandler = (data: any) => {
-    signin(data)
-      .unwrap()
-      .then(() => {})
-      .catch(() => {});
+    setIsLoading(true);
+    fetch("http://localhost:8000/api/v1/auth/jwt/create/", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      credentials: "include",
+      method: "POST",
+    })
+      .then((res) => {
+        if (res.status === 401) {
+          alert("401");
+        }
+        if (searchParams.get("callback_url")) {
+          window.location.href = `${window.location.origin}/${searchParams.get(
+            "callback_url"
+          )}`;
+        } else {
+          window.location.href = `${window.location.origin}`;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const {

@@ -66,6 +66,7 @@ const TasksPage = () => {
   }, [due_dateValue]);
 
   const submitHandler = (data: CreateTaskFormData) => {
+    //FIXME: Get user from server by property
     data.user = "ac0e0991-b75b-4367-9ca6-7f786f50e633";
     createTask(data)
       .unwrap()

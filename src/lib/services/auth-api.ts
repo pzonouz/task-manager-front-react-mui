@@ -1,21 +1,27 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { JWTAccess, User } from "../types/User";
+import { User } from "../types/User";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   tagTypes: ["auth"],
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_API_URL}/auth/`,
+    credentials: "include",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
   }),
   endpoints: (builder) => ({
-    signin: builder.mutation<JWTAccess, Partial<User>>({
-      query: ({ ...user }) => ({
-        url: "jwt/create",
-        method: "POST",
-        body: user,
-      }),
-      invalidatesTags: ["auth"],
-    }),
+    //Don't use RTK Query Because it's not taking http only Cookie
+    // signin: builder.mutation<JWTAccess, Partial<User>>({
+    //   query: ({ ...user }) => ({
+    //     url: "jwt/create",
+    //     method: "POST",
+    //     body: user,
+    //   }),
+    //   invalidatesTags: ["auth"],
+    // }),
     signup: builder.mutation<User, Partial<User>>({
       query: ({ ...user }) => ({
         url: "/users/",
@@ -26,4 +32,4 @@ export const authApi = createApi({
     }),
   }),
 });
-export const { useSigninMutation, useSignupMutation } = authApi;
+export const { useSignupMutation } = authApi;

@@ -1,6 +1,11 @@
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import axios from "axios";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import PrimarySearchAppBar from "./components/PrimarySearchAppBar";
 import "./index.css";
 import { store } from "./lib/store/store";
@@ -24,6 +29,21 @@ const router = createBrowserRouter([
       {
         path: "/tasks",
         loader: async () => {
+          const resUser = await fetch(
+            `${import.meta.env.VITE_API_URL}/auth/users/me/`,
+            {
+              credentials: "include",
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          if (!resUser.ok && resUser.status === 401) {
+            return redirect("/auth/signin");
+          }
+          //FIXME: Pass user to component
+          console.log(await resUser.json());
           const resCategories = await fetch(
             `${import.meta.env.VITE_API_URL}/categories/`
           );

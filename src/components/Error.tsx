@@ -1,12 +1,21 @@
-import { useNavigate } from "react-router-dom";
+import {
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "react-router-dom";
 import { Typography, Button, Container, Box } from "@mui/material";
 
 const ErrorPage = () => {
   const navigate = useNavigate();
+  const error = useRouteError();
 
   const handleGoHome = () => {
     navigate("/");
   };
+  if (isRouteErrorResponse(error) && error.status == 401) {
+    console.log(error.status);
+    navigate("/auth/signin");
+  }
 
   return (
     <Container
