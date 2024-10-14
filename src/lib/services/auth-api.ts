@@ -30,6 +30,13 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["auth"],
     }),
+    getUser: builder.query<User, void>({
+      query: () => ({
+        url: "/users/me",
+        method: "GET",
+      }),
+      providesTags: ["auth"],
+    }),
   }),
 });
-export const { useSignupMutation } = authApi;
+export const { useSignupMutation, useGetUserQuery } = authApi;

@@ -1,6 +1,5 @@
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import axios from "axios";
 import {
   createBrowserRouter,
   redirect,
@@ -42,8 +41,7 @@ const router = createBrowserRouter([
           if (!resUser.ok && resUser.status === 401) {
             return redirect("/auth/signin");
           }
-          //FIXME: Pass user to component
-          console.log(await resUser.json());
+          const user = await resUser.json();
           const resCategories = await fetch(
             `${import.meta.env.VITE_API_URL}/categories/`
           );
@@ -52,7 +50,7 @@ const router = createBrowserRouter([
             `${import.meta.env.VITE_API_URL}/priorities/`
           );
           const priorities = await resPriorities.json();
-          return { categories: categories, priorities: priorities };
+          return { categories: categories, priorities: priorities, user: user };
         },
         element: <TasksPage />,
       },

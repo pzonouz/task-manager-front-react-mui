@@ -6,6 +6,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  Link,
   OutlinedInput,
   Paper,
   TextField,
@@ -14,11 +15,11 @@ import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect, useSearchParams } from "react-router-dom";
+import {  Link as RouterLink, useSearchParams } from "react-router-dom";
 const SigninPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams,] = useSearchParams();
   const submitHandler = (data: any) => {
     setIsLoading(true);
     fetch("http://localhost:8000/api/v1/auth/jwt/create/", {
@@ -145,6 +146,7 @@ const SigninPage = () => {
         >
           Login
         </LoadingButton>
+        <Link component={RouterLink} to="/auth/signup">Signup</Link>
       </Paper>
     </div>
   );

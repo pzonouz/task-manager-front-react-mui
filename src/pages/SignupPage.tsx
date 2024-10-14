@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  Link,
   OutlinedInput,
   Paper,
   Snackbar,
@@ -14,6 +15,7 @@ import {
 } from "@mui/material";
 import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
+import {Link as RouterLink} from "react-router-dom";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSignupMutation } from "../lib/services/auth-api";
@@ -208,6 +210,7 @@ const SignupPage = () => {
         >
           Login
         </LoadingButton>
+        <Link component={RouterLink} to="/auth/signin">Already have an account? Login</Link>
       </Paper>
     </div>
   );

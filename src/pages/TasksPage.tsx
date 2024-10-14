@@ -33,14 +33,15 @@ import * as z from "zod";
 import dayjs from "dayjs";
 import TasksList from "../components/TasksList";
 import { useLoaderData } from "react-router-dom";
+import { User } from "../lib/types/User";
 
 const TasksPage = () => {
-  const { priorities, categories } = useLoaderData() as {
+  const { priorities, categories, user } = useLoaderData() as {
     priorities: Priority[];
     categories: Category[];
+    user: User;
   };
   const [createTask, { isLoading }] = useCreateTaskMutation();
-
   const [modalOpen, setModalOPen] = useState(false);
   const [snackbarOPen, setSnackbarOPen] = useState(false);
   const [due_dateValue, setDueDateValue] = useState(dayjs());
@@ -64,10 +65,9 @@ const TasksPage = () => {
     setValue("due_date", due_dateValue.toISOString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [due_dateValue]);
-
+// FIXME: Handle 500 error and task unique error
   const submitHandler = (data: CreateTaskFormData) => {
-    //FIXME: Get user from server by property
-    data.user = "ac0e0991-b75b-4367-9ca6-7f786f50e633";
+    data.user = user?.id!;
     createTask(data)
       .unwrap()
       .then(() => {
@@ -77,6 +77,9 @@ const TasksPage = () => {
         resetField("description");
       })
       .catch((err) => {
+        if(err.status === 500) {
+          alert("server Error")
+        }
         Object.keys(err.data).forEach((field) => {
           // Set error for each field using setError By ChatGPT
           setError(field as keyof Task, {

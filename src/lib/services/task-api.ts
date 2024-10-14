@@ -6,6 +6,9 @@ export const taskApi = createApi({
   tagTypes: ["tasks"],
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_API_URL}/tasks/`,
+    headers: {
+      "Content-Type": "application/json",
+    },
   }),
   endpoints: (builder) => ({
     getTasks: builder.query<Task[], void>({
